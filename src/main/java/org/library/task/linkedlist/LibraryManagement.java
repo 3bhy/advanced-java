@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class LibraryManagement {
+
     private final List<Integer> availableBooks = new LinkedList<>();
     private final List<Integer> borrowedBooks = new LinkedList<>();
     private final Scanner scanner = new Scanner(System.in);
@@ -36,6 +37,7 @@ public class LibraryManagement {
                 case 4 -> returnBook();
                 case 5 -> {
                     System.out.println("Good Bye!");
+                    scanner.close();
                     return;
                 }
                 default -> System.out.println("Invalid choice.");
@@ -44,14 +46,29 @@ public class LibraryManagement {
     }
 
     private void printBorrowedBooks() {
+        if (borrowedBooks.isEmpty()) {
+            System.out.println("No borrowed books.");
+            return;
+        }
+
         System.out.println("Borrowed Books: " + borrowedBooks);
     }
 
     private void printCurrentBooks() {
+        if (availableBooks.isEmpty()) {
+            System.out.println("No available books.");
+            return;
+        }
+
         System.out.println("Current Books: " + availableBooks);
     }
 
     private void borrowBook() {
+        if (availableBooks.isEmpty()) {
+            System.out.println("No available books to borrow.");
+            return;
+        }
+
         System.out.print("Enter book id: ");
         int bookId = scanner.nextInt();
 
@@ -67,15 +84,19 @@ public class LibraryManagement {
     }
 
     private void returnBook() {
+        if (borrowedBooks.isEmpty()) {
+            System.out.println("No borrowed books to return.");
+            return;
+        }
+
         System.out.print("Enter book id: ");
         int bookId = scanner.nextInt();
 
-        if (!borrowedBooks.contains(bookId)) {
+        if (!borrowedBooks.remove(Integer.valueOf(bookId))) {
             System.out.println("This book is not borrowed.");
             return;
         }
 
-        borrowedBooks.remove(Integer.valueOf(bookId));
         availableBooks.add(bookId);
 
         System.out.println("Book returned successfully.");
